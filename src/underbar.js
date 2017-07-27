@@ -328,6 +328,19 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+	  var cachedRuns = {};
+	  
+	  return function() {
+		  var key = JSON.stringify(arguments);
+		  if (cachedRuns[key] != undefined) {
+			  //Found this function run in cache.
+			  return cachedRuns[key];
+		  } else {
+			  var result = func.apply(this, arguments);
+			  cachedRuns[key] = result;
+			  return result;
+		  }
+	  };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -337,6 +350,7 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+	  setTimeout(func, wait, arguments[2], arguments[3]);
   };
 
 
