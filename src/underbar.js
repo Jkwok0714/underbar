@@ -183,9 +183,16 @@
 		returnValue = accumulator;
 	  }
 	  
-	  for (var i = startIndex; i < collection.length; i++) {
-		  returnValue = iterator(returnValue, collection[i]);
+	  if (Array.isArray(collection)) {
+		for (var i = startIndex; i < collection.length; i++) {
+			returnValue = iterator(returnValue, collection[i]);
+		}
+	  } else {
+		  for (var key in collection) {
+			returnValue = iterator(returnValue, collection[key]);
+		  }
 	  }
+	  
 	  
 	  return returnValue;
   };
@@ -207,7 +214,16 @@
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
+	  if (iterator === undefined) {
+		  var iterator = function(test) {
+			  return test;
+		  };
+	  }
+	  
     // TIP: Try re-using reduce() here.
+	return _.reduce(collection, function(accumulator, test) {
+		return !!iterator(test) && accumulator;
+	}, true);
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
